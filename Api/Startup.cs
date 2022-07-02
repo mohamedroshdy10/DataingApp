@@ -32,7 +32,7 @@ namespace API
             services.AddDbContext<AppDBContext>(op=>{
                 op.UseSqlite(_config.GetConnectionString("DefaulteConnection"));
             });
-
+              services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -53,7 +53,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+             //after routing we declared the cores
+             app.UseCors(X=>X.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
