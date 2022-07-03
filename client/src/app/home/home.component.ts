@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  users: any[] = [];
+  users: any = {};
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -24,7 +24,9 @@ export class HomeComponent implements OnInit {
 
   getUsers() {
     this.http.get('https://localhost:7018/api/Users').subscribe({
-      next: (response) => console.log(response),
+      next: (response) => {
+        this.users = response;
+      },
       error: (error) => console.log(error),
     });
   }

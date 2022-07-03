@@ -1,19 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Api.DataContext;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Api.Extenstion;
 using Microsoft.OpenApi.Models;
-
 namespace API
 {
     public class Startup
@@ -29,11 +15,10 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDBContext>(op=>{
-                op.UseSqlite(_config.GetConnectionString("DefaulteConnection"));
-            });
-              services.AddCors();
-            services.AddControllers();
+         services.ApplicarionServices(_config);            
+            services.IdentitiyServices(_config); 
+            services.AddCors();
+            services.AddControllers();           
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
@@ -51,15 +36,16 @@ namespace API
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
              //after routing we declared the cores
              app.UseCors(X=>X.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

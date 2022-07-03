@@ -1,12 +1,12 @@
 using Api.DataContext;
 using Api.Entitis;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-   [ApiController]
-   [Route("api/[Controller]")]
-    public class UsersController:ControllerBase
+   
+    public class UsersController:Controller
     {
         //Fildes
         private readonly AppDBContext _dBContext;
@@ -15,14 +15,15 @@ namespace Api.Controllers
         _dBContext=dBContext;
     }
 
-
     //GetData
+    [AllowAnonymous]
   [HttpGet]
     public ActionResult<IEnumerable<User>>GetAllUsers()
     {
         return _dBContext.users.ToList();
     }
-    [HttpGet("{id}") ]
+    [Authorize]
+    [HttpGet("{id}") ] 
     public ActionResult<User>GetUser(int id)
     {
         return _dBContext.users.Find(id);
